@@ -105,6 +105,15 @@ CreateEditSprint = ($repo, $confirm, $rs, $rootscope, lightboxService, $loading,
                     $confirm.notify("error")
                 $repo.remove($scope.sprint).then(onSuccess, onError)
 
+        getLastSprint = ->
+            openSprints = _.filter $scope.sprints, (sprint) ->
+                return !sprint.closed
+
+            sortedSprints = _.sortBy openSprints, (sprint) ->
+                return moment(sprint.estimated_finish, 'YYYY-MM-DD').format('X');
+
+            return sortedSprints[sortedSprints.length - 1];
+
         $scope.$on "sprintform:create", (event, projectId) ->
             form = $el.find("form").checksley()
             form.reset()
@@ -115,13 +124,14 @@ CreateEditSprint = ($repo, $confirm, $rs, $rootscope, lightboxService, $loading,
             $scope.sprint.name = null
             $scope.sprint.slug = null
 
-            lastSprint = $scope.sprints[0]
+            lastSprint = getLastSprint()
 
             estimatedStart = moment()
             if $scope.sprint.estimated_start
                 estimatedStart = moment($scope.sprint.estimated_start)
             else if lastSprint?
                 estimatedStart = moment(lastSprint.estimated_finish)
+
             $scope.sprint.estimated_start = estimatedStart.format(prettyDate)
 
             estimatedFinish = moment().add(2, "weeks")
