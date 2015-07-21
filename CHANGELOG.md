@@ -11,6 +11,7 @@
 
 ### Misc
 - Improve performance: Show cropped images in timelines.
+- Caps lock warning in login and register form.
 - Lots of small and not so small bugfixes.
 
 
